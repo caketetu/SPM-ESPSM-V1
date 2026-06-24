@@ -80,7 +80,7 @@ void loop() {
       CanFrame obdFrame = { 0 };
       switch (cmd) {
         //RS485送信
-        case 0:
+        case 0x5223:
           uint8_t tx_buf[50];
           for (int i = 2; i < rx_len - 2; i++) {
             tx_buf[i - 2] = rx_buf[i];
@@ -89,24 +89,24 @@ void loop() {
           break;
 
         //CAN送信
-        case 1:
-          obdFrame.identifier = rx_buf[3];  // Default OBD2 address;
+        case 0x4323:
+          obdFrame.identifier = rx_buf[2];  // Default OBD2 address;
           obdFrame.extd = 0;
           obdFrame.data_length_code = 8;
-          obdFrame.data[0] = (uint8_t)rx_buf[4];
-          obdFrame.data[1] = (uint8_t)rx_buf[5];
-          obdFrame.data[2] = (uint8_t)rx_buf[6];
-          obdFrame.data[3] = (uint8_t)rx_buf[7];
-          obdFrame.data[4] = (uint8_t)rx_buf[8];
-          obdFrame.data[5] = (uint8_t)rx_buf[9];
-          obdFrame.data[6] = (uint8_t)rx_buf[10];
-          obdFrame.data[7] = (uint8_t)rx_buf[11];
+          obdFrame.data[0] = (uint8_t)rx_buf[3];
+          obdFrame.data[1] = (uint8_t)rx_buf[4];
+          obdFrame.data[2] = (uint8_t)rx_buf[5];
+          obdFrame.data[3] = (uint8_t)rx_buf[6];
+          obdFrame.data[4] = (uint8_t)rx_buf[7];
+          obdFrame.data[5] = (uint8_t)rx_buf[8];
+          obdFrame.data[6] = (uint8_t)rx_buf[9];
+          obdFrame.data[7] = (uint8_t)rx_buf[10];
           // Accepts both pointers and references
           ESP32Can.writeFrame(obdFrame);  // timeout defaults to 1 ms
           break;
 
         //SPI送信
-        // case 0x0002:
+        // case 0x5323:
         //   break;
         default: break;
       }
